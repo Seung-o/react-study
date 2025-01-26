@@ -1,14 +1,22 @@
 import "./App.css";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import Main from "./components/Main";
+import Button from "./components/Button";
+
+const buttonProps = {
+  text: "메일",
+  color: "red",
+};
 
 function App() {
   return (
     <>
-      <Header />
-      <Main />
-      <Footer />
+      {/* <Header /> */}
+      {/* <Main /> */}
+      {/* <Footer /> */}
+      <Button {...buttonProps} />
+      <Button text={"카페"}>
+        <div>자식 컴포넌트</div>
+      </Button>
+      <Button text={"블로그"} />
     </>
   );
 }
