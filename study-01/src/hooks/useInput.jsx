@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 // Custom Hook
 // use 로 시작하는 네이밍을 가지고 있어야 함
 function useInput() {
