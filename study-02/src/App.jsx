@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Controller from "./components/Controller";
+import Even from "./components/Even";
 import Viewer from "./components/Viewer";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
   });
 
   // 3. 언마운트 : 소멸
+
   const onClickButton = (value) => {
     setCount(count + value);
   };
@@ -32,6 +34,7 @@ function App() {
       <h1>Simple Counter</h1>
       <section>
         <Viewer count={count} />
+        {count % 2 === 0 ? <Even /> : null}
       </section>
       <section>
         <Controller onClickButton={onClickButton} />
