@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./List.css";
 import ToDoItem from "./ToDoItem";
 
-const List = ({ toDos }) => {
+const List = ({ toDos, onUpdate, onDelete }) => {
   const [search, setSearch] = useState("");
 
   const onChangeSearch = (e) => {
@@ -21,7 +21,14 @@ const List = ({ toDos }) => {
   const filteredToDos = getFilteredToDos();
 
   const itemComponents = filteredToDos.map((toDo) => {
-    return <ToDoItem key={toDo.id} {...toDo} />;
+    return (
+      <ToDoItem
+        key={toDo.id}
+        {...toDo}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
   });
 
   return (
