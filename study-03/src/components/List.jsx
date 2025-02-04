@@ -1,8 +1,11 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
+import { ToDoStateContext } from "../App";
 import "./List.css";
 import ToDoItem from "./ToDoItem";
 
-const List = ({ toDos, onUpdate, onDelete }) => {
+const List = () => {
+  const toDos = useContext(ToDoStateContext);
+
   const [search, setSearch] = useState("");
 
   const onChangeSearch = (e) => {
@@ -29,14 +32,7 @@ const List = ({ toDos, onUpdate, onDelete }) => {
   const filteredToDos = getFilteredToDos();
 
   const itemComponents = filteredToDos.map((toDo) => {
-    return (
-      <ToDoItem
-        key={toDo.id}
-        {...toDo}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
-    );
+    return <ToDoItem key={toDo.id} {...toDo} />;
   });
 
   return (
