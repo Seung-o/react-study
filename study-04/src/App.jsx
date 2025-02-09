@@ -1,5 +1,7 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import Button from "./components/Button";
+import Header from "./components/Header";
 import Diary from "./pages/Diary";
 import Home from "./pages/Home";
 import New from "./pages/New";
@@ -11,11 +13,15 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <>
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/new">New</Link>
-        <Link to="/diary">Diary</Link>
-      </div>
+      <Header
+        title="Center"
+        leftChild={<Button text="<" />}
+        rightChild={<Button text=">" />}
+      />
+      <Button text="TEST" onClick={() => console.log("123")} />
+      <Button text="TEST" type="POSITIVE" onClick={() => console.log("123")} />
+      <Button text="TEST" type="NEGATIVE" onClick={() => console.log("123")} />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/new" element={<New />} />
