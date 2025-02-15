@@ -1,4 +1,4 @@
-import { createContext, useReducer, useRef } from "react";
+import { createContext, useEffect, useReducer, useRef, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Diary from "./pages/Diary";
@@ -7,51 +7,65 @@ import Home from "./pages/Home";
 import New from "./pages/New";
 import NotFound from "./pages/NotFound";
 
-const mockData = [
-  {
-    id: 1,
-    content: "오늘은 날씨가 좋네요.",
-    date: new Date("2025-02-14").getTime(),
-    emotionId: 1,
-  },
-  {
-    id: 2,
-    content: "오늘은 날씨가 좋네요.",
-    date: new Date("2025-02-13").getTime(),
-    emotionId: 2,
-  },
-  {
-    id: 3,
-    content: "오늘은 날씨가 좋네요.",
-    date: new Date("2025-01-12").getTime(),
-    emotionId: 3,
-  },
-];
-
 function reducer(state, action) {
+  let nextState;
+
   switch (action.type) {
+    case "INIT":
+      return action.data;
     case "CREATE":
-      return [...state, action.data];
+      nextState = [...state, action.data];
+      break;
     case "UPDATE":
-      return state.map((item) =>
+      nextState = state.map((item) =>
         String(item.id) === String(action.data.id)
           ? { ...item, ...action.data }
           : item
       );
+      break;
     case "DELETE":
-      return state.filter((item) => String(item.id) !== String(action.data.id));
+      nextState = state.filter(
+        (item) => String(item.id) !== String(action.data.id)
+      );
+      break;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
+
+  localStorage.setItem("diary", JSON.stringify(nextState));
+  return nextState;
 }
 
 export const DiaryStateContext = createContext();
 export const DiaryDispatchContext = createContext();
 
 function App() {
-  const [data, dispatch] = useReducer(reducer, mockData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, dispatch] = useReducer(reducer, []);
 
-  const idRef = useRef(mockData.length + 1);
+  const idRef = useRef(0);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("diary");
+
+    if (!savedData) {
+      setIsLoading(false);
+      return;
+    }
+
+    const parsedData = JSON.parse(savedData);
+
+    if (!Array.isArray(parsedData)) {
+      setIsLoading(false);
+      return;
+    }
+
+    dispatch({ type: "INIT", data: parsedData });
+
+    idRef.current = parsedData.reduce((acc, cur) => Math.max(acc, cur.id), 0);
+
+    setIsLoading(false);
+  }, []);
 
   const onCreate = (content, emotionId, date) => {
     dispatch({
@@ -85,6 +99,10 @@ function App() {
       },
     });
   };
+
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
 
   return (
     <>
